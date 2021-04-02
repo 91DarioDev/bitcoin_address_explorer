@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>BTC simple check</title>
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+    <link rel="stylesheet" href="loader.css">
+</head>
+<body class="">
+    <div id="loader-container" style="display: none;">
+        <div class="spinner-border" role="status" id="loader">
+            <span class="sr-only">Loading...</span>
+        </div>
+    </div>
+    <div class="container">
+        <div class="row py-2 bg-dark text-light">
+            <div class="col-12">
+                <h4>btc easy check</h4>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="row my-4">
+            <div class="col-12 col-md-6 mx-auto">
+                <label class="h5">Insert the btc address: </label>
+                <div class="input-group mb-3">
+                    <input type="text" class="form-control" placeholder="btc address here" id="address-input">
+                    <div class="input-group-append">
+                      <button class="btn btn-info" type="button" id="check-address">Check</button>
+                    </div>
+                  </div>
+            </div>
+        </div>
+
+        <div class="row my-4">
+            <div class="col-12 col-md-6 mx-auto d-none" id="balance-row">
+                <div class="border text-center rounded p-4 bg-light">
+                    <span>Balance: </span><span id="final-balance"></span><span class="ml-2">BTC</span>
+                    <br>
+                    <span>Received: </span><span class="text-success" id="total-received"></span><span class="ml-2">BTC</span>
+                    <br>
+                    <span>Sent: </span><span class="text-danger" id="total-sent"></span><span class="ml-2">BTC</span>
+                    <br>
+                    <span>Transactions: </span><span id="total-transactions"></span>
+                </div>
+            </div>
+        </div>
+
+        <div class="row my-4">
+            <div class="col-12 col-md-6 mx-auto d-none" id="txs-row">
+                
+            </div>
+        </div>
+
+    </div>                    
+
+    <div class="modal" tabindex="-1" role="dialog" id="error-alert-modal">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Errore:</h5>
+                    <button type="button" class="close close-error-alert-modal" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.min.js" integrity="sha384-j0CNLUeiqtyaRmlzUHCPZ+Gy5fQu0dQ6eZ/xAww941Ai1SxSY+0EQqNXNE6DZiVc" crossorigin="anonymous"></script>    
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.1/dist/umd/popper.min.js" integrity="sha384-SR1sx49pcuLnqZUnnPwx6FCym0wLsk5JZuNx2bPPENzswTNFaQU1RDvt3wT4gWFG" crossorigin="anonymous"></script>
+    <script src="api.js"></script>
+    <script src="loader.js"></script>
+    <script src="script.js"></script>
+</body>

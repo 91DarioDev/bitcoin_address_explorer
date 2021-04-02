@@ -1,0 +1,19 @@
+#loader-container {
+    background: rgba(0,0,0, 0.75);
+    height: 100%;
+    width: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 10000;
+}
+
+#loader{
+    position: absolute;
+    width: 4rem;
+    height: 4rem;
+    top: calc(50% - 2rem);
+    left: calc(50% - 2rem);
+    border: .4em solid rgb(110, 153, 247);
+    border-right-color: transparent;
+}

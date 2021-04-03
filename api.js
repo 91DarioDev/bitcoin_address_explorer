@@ -1,38 +1,42 @@
 var api = {
-    getWAddress: function(address, callback){
-        var loading = new Loader();
-        loading.show();
-        $.ajax({
-            url : `https://blockchain.info/multiaddr?active=${address}`,
-            type : 'GET',
-            crossDomain: true,
-            dataType:'json',
-            success : function(data) {  
-                loading.hide();
-                return callback(null, data)
-            },
-            error : function(e){
-                loading.hide();
-                return callback(e)
-            }
+    getWAddress: function(address, page=1){
+        return new Promise((resolve, reject)=>{
+            var loading = new Loader();
+            loading.show();
+            $.ajax({
+                url : `https://blockchain.info/multiaddr?active=${address}&n=${constants.ITEMS_PER_PAGE}&offset=${(page-1)*constants.ITEMS_PER_PAGE}`,
+                type : 'GET',
+                crossDomain: true,
+                dataType:'json',
+                success : function(data) {  
+                    loading.hide();
+                    return resolve(data)
+                },
+                error : function(e){
+                    loading.hide();
+                    return reject(e)
+                }
+            });
         });
     },
-    getPrice: function(callback){
-        var loading = new Loader();
-        loading.show();
-        $.ajax({
-            url : `https://min-api.cryptocompare.com/data/price?fsym=BTC&tsyms=USD,EUR`,
-            type : 'GET',
-            crossDomain: true,
-            dataType:'json',
-            success : function(data) {  
-                loading.hide();
-                return callback(null, data)
-            },
-            error : function(e){
-                loading.hide();
-                return callback(e)
-            }
+    getPrice: function(){
+        return new Promise((resolve, reject)=>{
+            var loading = new Loader();
+            loading.show();
+            $.ajax({
+                url : `https://min-api.cryptocompare.com/data/price?fsym=BTC&tsyms=USD,EUR`,
+                type : 'GET',
+                crossDomain: true,
+                dataType:'json',
+                success : function(data) {  
+                    loading.hide();
+                    return resolve(data);
+                },
+                error : function(e){
+                    loading.hide();
+                    return reject(e);
+                }
+            });
         });
     },
     getPriceAtTransactionTime: function(ts, cur){

@@ -97,7 +97,7 @@ var blockPayment = function(tx, conversion, eurNow, usdNow, latest_height){
                         </div>
                         <div class="col-5 text-right">
                             <div>${date.toLocaleDateString()} ${date.toTimeString().split(' ')[0]}</div>
-                            <div><span>${confirmationsOutput.text}</span><span>${confirmationsOutput.icon}</span></div> 
+                            <div><span>${confirmationsOutput.text} </span><span> ${confirmationsOutput.icon}</span></div> 
                         </div>
                         <div class="col-12 ${date.getTime() < new Date().getTime()-86400*7*1000 ? 'd-none' : ''}">
                             <div class="my-2">

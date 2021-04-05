@@ -77,6 +77,7 @@ var load = function(){
     if (!page){
         urlParams.set("page", 1);
         window.location.search = urlParams.toString();
+        return;
     }
     $('#address-input').val(address);
     checkAddress(address, page);

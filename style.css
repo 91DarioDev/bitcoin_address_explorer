@@ -7,3 +7,11 @@
 .bg-black{
     background-color: black;
 }
+.page-link, .page-item{
+    background-color: inherit;
+    color: inherit;
+}
+.page-item .ellipse{
+    background-color: inherit!important;
+    color: inherit!important;
+}

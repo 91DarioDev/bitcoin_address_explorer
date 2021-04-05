@@ -1,6 +1,6 @@
 var LATEST_LOADER = 0;
 var loaderObject = $('#loader-container');
-var Loader = function(timeout=30000){
+var Loader = function(timeout=60000){
     LATEST_LOADER++;
     this.loaderId = LATEST_LOADER;
     this.timeout = timeout;

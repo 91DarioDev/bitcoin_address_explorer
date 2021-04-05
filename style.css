@@ -4,3 +4,6 @@
 .page-item .next{
     display: none;
 }
+.bg-black{
+    background-color: black;
+}

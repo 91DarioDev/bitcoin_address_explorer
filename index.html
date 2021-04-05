@@ -13,27 +13,35 @@
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.2/css/all.css" integrity="sha384-vSIIfh2YWi9wW0r9iZe7RJPrKwp6bG+s9QZMoITbCckVJqGCCRhc+ccxNcdpHuYu" crossorigin="anonymous">
 </head>
-<body class="">
+<body class="bg-dark text-light">
     <div id="loader-container" style="display: none;">
         <div class="spinner-border" role="status" id="loader">
             <span class="sr-only">Loading...</span>
         </div>
     </div>
     
-    <div class="row mx-0 py-2 bg-dark text-light">
-        <div class="container">
-            <div class="col-12 text-left">
-                <h4>Check My BTC</h4>
-            </div>
+    <nav class="navbar navbar-expand-md navbar-dark bg-black">
+        <div class="container px-0">
+            <a class="navbar-brand" href="/" title="home">
+                Check My BTC
+            </a>
+            <button id="navbar-collapse-button" class="navbar-toggler" type="button" data-toggle="collapse"  data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div id="navbarNav" class="collapse navbar-collapse">
+                <div class="navbar-nav">
+                    <a title="email" class="nav-link" href="dariomsn@hotmail.it">Email</a>
+                </div>
+            </div>  
         </div>
-    </div>
+    </nav>
 
     <div class="container">
         <div class="row">
-            <div class="col-12 py-4 text-center">
+            <div class="border-bottom col-12 py-4 text-center">
                 <h1>Check My BTC
                     <br>
-                <small>Fast, Human readable and easy way to check your bitcoin wallet address</small></h1>
+                <small>Fast, Human readable and easy way to check your bitcoin wallet address balance</small></h1>
                 <h2 class="h4"><small>Unecessary data are confusing. Just check your bitcoin wallet address as you would do with your credit card history</small></h2>
                 <p><b>BTC donations:</b> 3QkfdZmuekVAxUUFMt6rVw7aNfv8pqPVn9</p>
             </div>
@@ -41,7 +49,7 @@
     </div>
 
     <div class="container">
-        <div class="row my-4">
+        <div class="row my-5">
             <div class="col-12 col-lg-8 mx-auto">
                 <label class="h5">Insert your btc address: </label>
                 <div class="input-group mb-3">
@@ -55,10 +63,12 @@
 
         <div class="row my-4">
             <div class="col-12 col-lg-8 mx-auto d-none" id="balance-row">
-                <div class="border text-center rounded p-4 bg-light h6">
-                    <div class="my-1"><span>Balance: </span><span id="final-balance"></span><span class="ml-2">BTC</span></div>
-                    <div class="my-1"><span>Received: </span><span class="text-success" id="total-received"></span><span class="ml-2">BTC</span></div>
-                    <div class="my-1"><span>Sent: </span><span class="text-danger" id="total-sent"></span><span class="ml-2">BTC</span></div>
+                <div class="border text-center rounded p-4 h6">
+                    <div class="my-1"><span>Balance BTC: </span><span id="final-balance"></span><span class="ml-2"></span></div>
+                    <div class="my-1"><span>Balance USD: </span><span id="final-balance-usd"></span><span class="ml-2"></span></div>
+                    <div class="my-1"><span>Balance EUR: </span><span id="final-balance-eur"></span><span class="ml-2"></span></div>
+                    <div class="my-1"><span>Received BTC: </span><span class="text-success" id="total-received"></span><span class="ml-2"></span></div>
+                    <div class="my-1"><span>Sent BTC: </span><span class="text-danger" id="total-sent"></span><span class="ml-2"></span></div>
                     <div class="my-1"><span>Transactions: </span><span id="total-transactions"></span></div>
                 </div>
             </div>
@@ -89,8 +99,8 @@
     </div>
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.min.js" integrity="sha384-j0CNLUeiqtyaRmlzUHCPZ+Gy5fQu0dQ6eZ/xAww941Ai1SxSY+0EQqNXNE6DZiVc" crossorigin="anonymous"></script>    
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.1/dist/umd/popper.min.js" integrity="sha384-SR1sx49pcuLnqZUnnPwx6FCym0wLsk5JZuNx2bPPENzswTNFaQU1RDvt3wT4gWFG" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
     <script src="vendor/simplepagination/jquery.simplePagination.js"></script>
     <script src="constants.js"></script>
     <script src="api.js"></script>

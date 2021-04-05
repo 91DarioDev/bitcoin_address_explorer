@@ -1,4 +1,4 @@
-# bitcoin_address_explorer
+# Check My BTC
 webpage to explore a bitcoin address via api
 
 ### A simple bitcoin address scanner to show only necessary things to check your balance and received transactions.

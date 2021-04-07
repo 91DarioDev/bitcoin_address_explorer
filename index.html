@@ -49,13 +49,20 @@
     </div>
 
     <div class="container">
-        <div class="row my-5">
+        <div class="row my-4">
             <div class="col-12 col-lg-8 mx-auto">
+                <div class="my-1 text-center">
+                    1 BTC = <span id="btc-to-usd"></span> USD
+                </div>
+                <div class="my-1 text-center">
+                    1 BTC = <span id="btc-to-eur"></span> EUR
+                </div>
+                <div class="mt-1 mb-4"></div>
                 <label class="h5">Insert your btc address: </label>
                 <div class="input-group mb-3">
                     <input type="text" class="form-control" placeholder="bitcoin address here" id="address-input">
                     <div class="input-group-append">
-                      <button class="btn btn-info" type="button" id="check-address">Check</button>
+                      <button class="btn btn-primary" type="button" id="check-address">Check</button>
                     </div>
                   </div>
             </div>
@@ -84,10 +91,10 @@
 
     <div class="modal" tabindex="-1" role="dialog" id="error-alert-modal">
         <div class="modal-dialog modal-dialog-centered" role="document">
-            <div class="modal-content">
+            <div class="modal-content bg-dark border">
                 <div class="modal-header">
                     <h5 class="modal-title">Error:</h5>
-                    <button type="button" class="close close-error-alert-modal" data-dismiss="modal" aria-label="Close">
+                    <button type="button" class="close close-error-alert-modal text-light" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>

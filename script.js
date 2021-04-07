@@ -45,6 +45,11 @@ $(function(){
 });
 
 
+var updateChangePrice = (usd, eur)=>{
+    $('#btc-to-usd').text((usd).toFixed(2));
+    $('#btc-to-eur').text((eur).toFixed(2));
+}
+
 var confirmationsText = function(num, amountToConfirm=12){
     var text;
     var icon;
@@ -72,6 +77,13 @@ var load = function(){
     var address = urlParams.get('address');
     var page = urlParams.get('page');
     if (!address){
+        api.getPrice()
+        .then(res=>{
+            updateChangePrice(res.USD, res.EUR);
+        })
+        .catch(err=>{
+            //
+        });
         return;
     }
     if (!page){
@@ -84,6 +96,7 @@ var load = function(){
 }
 
 var blockPayment = function(tx, conversion, eurNow, usdNow, latest_height){
+    updateChangePrice(usdNow, eurNow);
     var date = new Date(tx.time*1000);
     var confirmations = tx.block_height ? latest_height-tx.block_height+1 : 0;
     var confirmationsOutput = confirmationsText(confirmations);
@@ -163,7 +176,7 @@ var checkAddress = function(address, page=1){
             var searchParams = new URLSearchParams(window.location.search);
             var address = searchParams.get("address");
             $('#pagination-container').pagination({
-                items: data.addresses[0].n_tx-constants.MAX_OFFSET_TX,
+                items: data.addresses[0].n_tx > constants.MAX_OFFSET_TX ? data.addresses[0].n_tx-constants.MAX_OFFSET_TX : data.addresses[0].n_tx,
                 itemsOnPage: constants.ITEMS_PER_PAGE,
                 ellipsePageSet: false,
                 edges: 1,

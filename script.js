@@ -31,8 +31,8 @@ $(function(){
                 `
                 <div>
                     <div>Value at transaction time: </div>
-                    <div>${Math.abs((amount*usd)).toFixed(2)} USD @ ${usd.toFixed(2)} USD</div>
-                    <div>${Math.abs((amount*eur)).toFixed(2)} EUR @ ${eur.toFixed(2)} EUR</div>
+                    <div>${utils.fNum(Math.abs((amount*usd)), true)} USD @ ${utils.fNum(usd, true)} USD</div>
+                    <div>${utils.fNum(Math.abs((amount*eur)), true)} EUR @ ${utils.fNum(eur, true)} EUR</div>
                 </div>
                 `
             );
@@ -46,8 +46,8 @@ $(function(){
 
 
 var updateChangePrice = (usd, eur)=>{
-    $('#btc-to-usd').text((usd).toFixed(2));
-    $('#btc-to-eur').text((eur).toFixed(2));
+    $('#btc-to-usd').text(utils.fNum(usd, true));
+    $('#btc-to-eur').text(utils.fNum(eur, true));
 }
 
 var confirmationsText = function(num, amountToConfirm=12){
@@ -112,8 +112,8 @@ var blockPayment = function(tx, conversion, eurNow, usdNow, latest_height){
                     <div class="row mt-2">
                         <div class="col-8 text-left">
                             <div><strong><span class="${tx.result > 0 ? 'text-success': 'text-danger'}">${tx.result > 0 ? '+': ''}${tx.result/conversion} BTC</span></strong></div>
-                            <div><span>${(Math.abs(tx.result/conversion*usdNow)).toFixed(2)}</span> USD now</div>
-                            <div><span>${(Math.abs(tx.result/conversion*eurNow)).toFixed(2)}</span> EUR now</div>
+                            <div><span>${utils.fNum((Math.abs(tx.result/conversion*usdNow)), true)}</span> USD now</div>
+                            <div><span>${utils.fNum((Math.abs(tx.result/conversion*eurNow)), true)}</span> EUR now</div>
                         </div>
                         <div class="col-4 text-right">
                             <div>${date.toLocaleDateString()}</div><div>${date.toTimeString().split(' ')[0]}</div>
@@ -146,11 +146,11 @@ var checkAddress = function(address, page=1){
         var dataPrice = res[0];
         var data = res[1];
         $('#final-balance').text(data.addresses[0].final_balance/data.info.conversion);
-        $('#final-balance-usd').text((data.addresses[0].total_received/data.info.conversion*dataPrice.USD).toFixed(2));
-        $('#final-balance-eur').text((data.addresses[0].total_received/data.info.conversion*dataPrice.EUR).toFixed(2));
+        $('#final-balance-usd').text(utils.fNum(data.addresses[0].total_received/data.info.conversion*dataPrice.USD, true));
+        $('#final-balance-eur').text(utils.fNum(data.addresses[0].total_received/data.info.conversion*dataPrice.EUR, true));
         $('#total-received').text(data.addresses[0].total_received/data.info.conversion);
         $('#total-sent').text(data.addresses[0].total_sent/data.info.conversion);
-        $('#total-transactions').text((data.addresses[0].n_tx).toLocaleString());
+        $('#total-transactions').text(utils.fNum(data.addresses[0].n_tx));
         $('#balance-row').removeClass('d-none');
 
         if ( data.txs.length > 0 ){

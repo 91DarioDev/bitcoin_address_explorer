@@ -24,7 +24,7 @@ var api = {
             var loading = new Loader();
             loading.show();
             $.ajax({
-                url : `https://min-api.cryptocompare.com/data/price?fsym=BTC&tsyms=USD,EUR`,
+                url : `https://min-api.cryptocompare.com/data/pricemultifull?fsyms=BTC&tsyms=USD,EUR`,
                 type : 'GET',
                 crossDomain: true,
                 dataType:'json',

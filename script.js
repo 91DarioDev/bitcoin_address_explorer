@@ -45,9 +45,15 @@ $(function(){
 });
 
 
-var updateChangePrice = (usd, eur)=>{
+var updateChangePrice = (usd, eur, usd24hPct, eur24hPct)=>{
     $('#btc-to-usd').text(utils.fNum(usd, true));
     $('#btc-to-eur').text(utils.fNum(eur, true));
+
+    $("#usd-24h-pct").text(`${usd24hPct > 0 ? '+' : ''}${utils.fNum(usd24hPct, true)}%`);
+    $("#eur-24h-pct").text(`${eur24hPct > 0 ? '+' : ''}${utils.fNum(eur24hPct, true)}%`);
+    $("#usd-24h-pct").removeClass('text-success').removeClass('text-danger').addClass(`${usd24hPct > 0 ? 'text-success' : 'text-danger'}`);
+    $("#eur-24h-pct").removeClass('text-success').removeClass('text-danger').addClass(`${eur24hPct > 0 ? 'text-success' : 'text-danger'}`);
+
 }
 
 var confirmationsText = function(num, amountToConfirm=12){
@@ -79,7 +85,12 @@ var load = function(){
     if (!address){
         api.getPrice()
         .then(res=>{
-            updateChangePrice(res.USD, res.EUR);
+            updateChangePrice(
+                res.RAW.BTC.USD.PRICE, 
+                res.RAW.BTC.EUR.PRICE,
+                res.RAW.BTC.USD.CHANGEPCT24HOUR,
+                res.RAW.BTC.EUR.CHANGEPCT24HOUR,
+            );
         })
         .catch(err=>{
             //
@@ -96,7 +107,6 @@ var load = function(){
 }
 
 var blockPayment = function(tx, conversion, eurNow, usdNow, latest_height){
-    updateChangePrice(usdNow, eurNow);
     var date = new Date(tx.time*1000);
     var confirmations = tx.block_height ? latest_height-tx.block_height+1 : 0;
     var confirmationsOutput = confirmationsText(confirmations);
@@ -145,9 +155,16 @@ var checkAddress = function(address, page=1){
     .then(res=>{
         var dataPrice = res[0];
         var data = res[1];
+
+        updateChangePrice(
+            dataPrice.RAW.BTC.USD.PRICE, 
+            dataPrice.RAW.BTC.EUR.PRICE,
+            dataPrice.RAW.BTC.USD.CHANGEPCT24HOUR,
+            dataPrice.RAW.BTC.EUR.CHANGEPCT24HOUR,
+        );
         $('#final-balance').text(data.addresses[0].final_balance/data.info.conversion);
-        $('#final-balance-usd').text(utils.fNum(data.addresses[0].total_received/data.info.conversion*dataPrice.USD, true));
-        $('#final-balance-eur').text(utils.fNum(data.addresses[0].total_received/data.info.conversion*dataPrice.EUR, true));
+        $('#final-balance-usd').text(utils.fNum(data.addresses[0].total_received/data.info.conversion*dataPrice.RAW.BTC.USD.PRICE, true));
+        $('#final-balance-eur').text(utils.fNum(data.addresses[0].total_received/data.info.conversion*dataPrice.RAW.BTC.EUR.PRICE, true));
         $('#total-received').text(data.addresses[0].total_received/data.info.conversion);
         $('#total-sent').text(data.addresses[0].total_sent/data.info.conversion);
         $('#total-transactions').text(utils.fNum(data.addresses[0].n_tx));
@@ -162,7 +179,7 @@ var checkAddress = function(address, page=1){
                 </div>
             `;
             for(let i=0; i < data.txs.length; i++){
-                html += blockPayment(data.txs[i], data.info.conversion, dataPrice.EUR, dataPrice.USD, data.info.latest_block.height);
+                html += blockPayment(data.txs[i], data.info.conversion, dataPrice.RAW.BTC.EUR.PRICE, dataPrice.RAW.BTC.USD.PRICE, data.info.latest_block.height);
             }
             html += `
                 <div class="row">

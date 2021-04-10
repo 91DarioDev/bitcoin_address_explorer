@@ -1,4 +1,8 @@
 $(function(){
+    $('#currency-switch').on('change', function(){
+        setCurChoice($(this).val());
+        curChoice(getCurChoice());
+    });
     load();
     $('.close-error-alert-modal').on('click', function(){
         $('#error-alert-modal').modal('hide');
@@ -13,9 +17,10 @@ $(function(){
         searchParams.set("address", address);
         searchParams.set("page", 1);
         window.location.search = searchParams.toString();
-        //checkAddress(address);
     });
     $('body').on('click', '.show-price-at-transaction-time', function(){
+        var loading = new Loader();
+        loading.show();
         var time = $(this).attr('time');
         var parent = $(this).parent();
         var amount = $(this).attr('amount');
@@ -31,19 +36,48 @@ $(function(){
                 `
                 <div>
                     <div>Value at transaction time: </div>
-                    <div>${utils.fNum(Math.abs((amount*usd)), true)} USD @ ${utils.fNum(usd, true)} USD</div>
-                    <div>${utils.fNum(Math.abs((amount*eur)), true)} EUR @ ${utils.fNum(eur, true)} EUR</div>
+                    <div class="usd-cur-choice">${utils.fNum(Math.abs((amount*usd)), true)} USD @ ${utils.fNum(usd, true)} USD</div>
+                    <div class="eur-cur-choice">${utils.fNum(Math.abs((amount*eur)), true)} EUR @ ${utils.fNum(eur, true)} EUR</div>
                 </div>
                 `
             );
-            console.log(eur, usd)
+            curChoice(getCurChoice());
         })
         .catch(function(e){
             showError(e.Message)
         })
+        .finally(()=>{
+            loading.hide();
+        })
     });
 });
 
+
+var curChoice = (cur) =>{
+    if (cur === 'usd'){
+        $('.usd-cur-choice').removeClass('d-none');
+        $('.eur-cur-choice').addClass('d-none');
+    } else if (cur === 'eur') {
+        $('.usd-cur-choice').addClass('d-none');
+        $('.eur-cur-choice').removeClass('d-none');
+    } else if (cur === 'usd+eur'){
+        $('.usd-cur-choice').removeClass('d-none');
+        $('.eur-cur-choice').removeClass('d-none');
+    }
+}
+
+var getCurChoice = () => {
+    var choice = localStorage.getItem('cur-choice');
+    if (!choice) {
+        choice = 'usd';
+        setCurChoice(choice);
+    }
+    return choice;
+}
+
+var setCurChoice = (cur) => {
+    localStorage.setItem('cur-choice', cur);
+}
 
 var updateChangePrice = (usd, eur, usd24hPct, eur24hPct)=>{
     $('#btc-to-usd').text(utils.fNum(usd, true));
@@ -79,6 +113,9 @@ var showError = function(stringE){
 }
 
 var load = function(){
+    var loading = new Loader();
+    loading.show();
+    $('#currency-switch').val(getCurChoice());
     var urlParams = new URLSearchParams(window.location.search);
     var address = urlParams.get('address');
     var page = urlParams.get('page');
@@ -91,19 +128,29 @@ var load = function(){
                 res.RAW.BTC.USD.CHANGEPCT24HOUR,
                 res.RAW.BTC.EUR.CHANGEPCT24HOUR,
             );
+            curChoice(getCurChoice());
         })
         .catch(err=>{
             //
+        })
+        .finally(()=>{
+            loading.hide();
         });
         return;
     }
     if (!page){
         urlParams.set("page", 1);
         window.location.search = urlParams.toString();
+        loading.hide();
         return;
     }
     $('#address-input').val(address);
-    checkAddress(address, page);
+    checkAddress(address, page, function(){
+        loading.hide();
+        curChoice(getCurChoice());
+    });
+    
+
 }
 
 var blockPayment = function(tx, conversion, eurNow, usdNow, latest_height){
@@ -122,8 +169,8 @@ var blockPayment = function(tx, conversion, eurNow, usdNow, latest_height){
                     <div class="row mt-2">
                         <div class="col-8 text-left">
                             <div><strong><span class="${tx.result > 0 ? 'text-success': 'text-danger'}">${tx.result > 0 ? '+': ''}${tx.result/conversion} BTC</span></strong></div>
-                            <div><span>${utils.fNum((Math.abs(tx.result/conversion*usdNow)), true)}</span> USD now</div>
-                            <div><span>${utils.fNum((Math.abs(tx.result/conversion*eurNow)), true)}</span> EUR now</div>
+                            <div class="usd-cur-choice"><span>${utils.fNum((Math.abs(tx.result/conversion*usdNow)), true)}</span> USD now</div>
+                            <div class="eur-cur-choice d-none"><span>${utils.fNum((Math.abs(tx.result/conversion*eurNow)), true)}</span> EUR now</div>
                         </div>
                         <div class="col-4 text-right">
                             <div>${date.toLocaleDateString()}</div><div>${date.toTimeString().split(' ')[0]}</div>
@@ -147,7 +194,7 @@ var blockPayment = function(tx, conversion, eurNow, usdNow, latest_height){
     return html;
 }
 
-var checkAddress = function(address, page=1){
+var checkAddress = function(address, page, cb){
     Promise.all([
         api.getPrice(),
         api.getWAddress(address, page)
@@ -211,5 +258,8 @@ var checkAddress = function(address, page=1){
             var str = 'An error occurred';
         }
         showError(str)
+    })
+    .finally(()=>{
+        cb();
     })
 }

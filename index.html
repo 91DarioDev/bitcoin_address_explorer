@@ -50,11 +50,22 @@
 
     <div class="container">
         <div class="row my-4">
+            <div class="col-8 col-md-4 mx-auto">
+                <form>
+                    <select id="currency-switch" class="custom-select">
+                        <option value="usd" selected>USD</option>
+                        <option value="eur">EUR</option>
+                        <option value="usd+eur">USD and EUR</option>
+                    </select>
+                </form>
+            </div>
+        </div>
+        <div class="row my-4">
             <div class="col-12 col-lg-8 mx-auto">
-                <div class="my-1 text-center">
+                <div class="my-1 usd-cur-choice text-center">
                     <span class="h4"><span id="btc-to-usd"></span> USD</span> <strong class="ml-2"><span id="usd-24h-pct"></span></strong> <small>24h</small>
                 </div>
-                <div class="my-1 text-center">
+                <div class="my-1 eur-cur-choice d-none text-center">
                     <span class="h4"><span id="btc-to-eur"></span> EUR</span> <strong class="ml-2"><span id="eur-24h-pct"></span></strong> <small>24h</small>
                 </div>
                 <div class="mt-1 mb-4"></div>
@@ -72,8 +83,8 @@
             <div class="col-12 col-lg-8 mx-auto d-none" id="balance-row">
                 <div class="border text-center rounded p-4 h6">
                     <div class="my-1"><span>Balance BTC: </span><span id="final-balance"></span><span class="ml-2"></span></div>
-                    <div class="my-1"><span>Balance USD: </span><span id="final-balance-usd"></span><span class="ml-2"></span></div>
-                    <div class="my-1"><span>Balance EUR: </span><span id="final-balance-eur"></span><span class="ml-2"></span></div>
+                    <div class="my-1 usd-cur-choice"><span>Balance USD: </span><span id="final-balance-usd"></span><span class="ml-2"></span></div>
+                    <div class="my-1 eur-cur-choice d-none"><span>Balance EUR: </span><span id="final-balance-eur"></span><span class="ml-2"></span></div>
                     <div class="my-1"><span>Received BTC: </span><span class="text-success" id="total-received"></span><span class="ml-2"></span></div>
                     <div class="my-1"><span>Sent BTC: </span><span class="text-danger" id="total-sent"></span><span class="ml-2"></span></div>
                     <div class="my-1"><span>Transactions: </span><span id="total-transactions"></span></div>

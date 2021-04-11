@@ -35,9 +35,9 @@ $(function(){
             $(parent).append(
                 `
                 <div>
-                    <div>Value at transaction time: </div>
-                    <div class="usd-cur-choice">${utils.fNum(Math.abs((amount*usd)), true)} USD @ ${utils.fNum(usd, true)} USD</div>
-                    <div class="eur-cur-choice">${utils.fNum(Math.abs((amount*eur)), true)} EUR @ ${utils.fNum(eur, true)} EUR</div>
+                    <div class="d-none">Value at transaction time: </div>
+                    <div class="usd-cur-choice"><i class="fas fa-handshake fa-fw"></i> ${utils.fNum(Math.abs((amount*usd)), true)} USD @ ${utils.fNum(usd, true)} USD</div>
+                    <div class="eur-cur-choice"><i class="fas fa-handshake fa-fw"></i> ${utils.fNum(Math.abs((amount*eur)), true)} EUR @ ${utils.fNum(eur, true)} EUR</div>
                 </div>
                 `
             );
@@ -50,6 +50,11 @@ $(function(){
             loading.hide();
         })
     });
+    $('body').on('click', '.show-tx-hash', function(){
+        var hash = $(this).closest('.hash-div').find('.tx-hash');
+        $(hash).text($(hash).attr('hash'));
+        $(this).remove();
+    })
 });
 
 
@@ -169,22 +174,29 @@ var blockPayment = function(tx, conversion, eurNow, usdNow, latest_height){
                     <div class="row mt-2">
                         <div class="col-8 text-left">
                             <div><strong><span class="${tx.result > 0 ? 'text-success': 'text-danger'}">${tx.result > 0 ? '+': ''}${tx.result/conversion} BTC</span></strong></div>
-                            <div class="usd-cur-choice"><span>${utils.fNum((Math.abs(tx.result/conversion*usdNow)), true)}</span> USD now</div>
-                            <div class="eur-cur-choice d-none"><span>${utils.fNum((Math.abs(tx.result/conversion*eurNow)), true)}</span> EUR now</div>
+                            <div class="usd-cur-choice"><span><i class="fas fa-dollar-sign fa-fw"></i> ${utils.fNum((Math.abs(tx.result/conversion*usdNow)), true)}</span> USD now</div>
+                            <div class="eur-cur-choice d-none"><span><i class="fas fa-euro-sign fa-fw"></i> ${utils.fNum((Math.abs(tx.result/conversion*eurNow)), true)}</span> EUR now</div>
                         </div>
                         <div class="col-4 text-right">
                             <div>${date.toLocaleDateString()}</div><div>${date.toTimeString().split(' ')[0]}</div>
                         </div>
                         <div class="col-12">
-                            <div><span>${confirmationsOutput.text} </span><span> ${confirmationsOutput.icon}</span></div>
+                            <div><span><i class="fas fa-book-open fa-fw"></i> ${confirmationsOutput.text} </span><span> ${confirmationsOutput.icon}</span></div>
                         </div>
-                        <div class="col-12 my-1 ${date.getTime() < new Date().getTime()-86400*7*1000 ? 'd-none' : ''}">
-                            Value at transaction time: 
-                            <button type="button" time="${tx.time}" amount="${tx.result/conversion}" class="ml-1 btn btn-sm btn-primary show-price-at-transaction-time">Show</button>
+                        <div class="col-12">
+                            <div class=""><i class="fas fa-hammer fa-fw"></i> fee: ${utils.fBtc(tx.fee*0.00000001)} BTC</div>
                         </div>
-                        <div class="col-12 my-1">
-                            <div class="">tx hash:</div> 
-                            <div style="word-wrap: break-word;">${tx.hash}</div>
+                        <div class="col-12 ${date.getTime() < new Date().getTime()-86400*7*1000 ? 'd-none' : ''}">
+                            <div time="${tx.time}" amount="${tx.result/conversion}" class="show-price-at-transaction-time">
+                                <span><i class="fas fa-handshake fa-fw"></i> </span><span class="text-info clickable-text">Show value at transaction time</span>
+                            </div> 
+                        </div>
+                        <div class="col-12 hash-div">
+                            <div style="word-wrap: break-word;">
+                                <span><i class="fas fa-hashtag fa-fw"></i> tx hash: </span>
+                                <span class="tx-hash" hash="${tx.hash}">${utils.middleEllipsis(tx.hash)} </span>
+                                <span class="text-info clickable-text show-tx-hash">show</span>
+                            </div> 
                         </div>
                     </div>
                 </div>

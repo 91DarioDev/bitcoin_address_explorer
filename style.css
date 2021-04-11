@@ -15,3 +15,7 @@
     background-color: inherit!important;
     color: inherit!important;
 }
+.clickable-text{
+    cursor: pointer;
+    text-decoration: underline;
+}

@@ -95,17 +95,17 @@ var updateChangePrice = (usd, eur, usd24hPct, eur24hPct)=>{
 
 }
 
-var confirmationsText = function(num, amountToConfirm=12){
+var confirmationsText = function(num, amountToConfirm=6){
     var text;
     var icon;
     if (num == 0){
-        text = `confirmations: 0`;
+        text = `confirmations: 0/${amountToConfirm}`;
         icon =  `<i class="fas fa-question-circle text-danger"></i>`;
-    } else if ( num < amountToConfirm+1){
-        text = `confirmations: ${num}`;
+    } else if ( num < amountToConfirm){
+        text = `confirmations: ${num}/${amountToConfirm}`;
         icon =  `<i class="far fa-clock text-warning"></i>`;
     } else {
-        text = `confirmations: ${amountToConfirm}+`;
+        text = `confirmations: ${amountToConfirm}${num == amountToConfirm ? '' : '+'}/${amountToConfirm}`;
         icon = `<i class="fas fa-check-circle text-success"></i>`;
     }
     return {text, icon};

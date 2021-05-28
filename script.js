@@ -173,7 +173,7 @@ var blockPayment = function(tx, conversion, eurNow, usdNow, latest_height){
                     </div>
                     <div class="row mt-2">
                         <div class="col-8 text-left">
-                            <div><strong><span class="${tx.result > 0 ? 'text-success': 'text-danger'}">${tx.result > 0 ? '+': ''}${tx.result/conversion} BTC</span></strong></div>
+                            <div><strong><span class="${tx.result > 0 ? 'text-success': 'text-danger'}">${tx.result > 0 ? '+': ''}${utils.fBtc(tx.result/conversion)} BTC</span></strong></div>
                             <div class="usd-cur-choice"><span><i class="fas fa-dollar-sign fa-fw"></i> ${utils.fNum((Math.abs(tx.result/conversion*usdNow)), true)}</span> USD now</div>
                             <div class="eur-cur-choice d-none"><span><i class="fas fa-euro-sign fa-fw"></i> ${utils.fNum((Math.abs(tx.result/conversion*eurNow)), true)}</span> EUR now</div>
                         </div>
@@ -221,11 +221,11 @@ var checkAddress = function(address, page, cb){
             dataPrice.RAW.BTC.USD.CHANGEPCT24HOUR,
             dataPrice.RAW.BTC.EUR.CHANGEPCT24HOUR,
         );
-        $('#final-balance').text(data.addresses[0].final_balance/data.info.conversion);
-        $('#final-balance-usd').text(utils.fNum(data.addresses[0].total_received/data.info.conversion*dataPrice.RAW.BTC.USD.PRICE, true));
-        $('#final-balance-eur').text(utils.fNum(data.addresses[0].total_received/data.info.conversion*dataPrice.RAW.BTC.EUR.PRICE, true));
-        $('#total-received').text(data.addresses[0].total_received/data.info.conversion);
-        $('#total-sent').text(data.addresses[0].total_sent/data.info.conversion);
+        $('#final-balance').text(utils.fBtc(data.addresses[0].final_balance/data.info.conversion));
+        $('#final-balance-usd').text(utils.fNum(data.addresses[0].final_balance/data.info.conversion*dataPrice.RAW.BTC.USD.PRICE, true));
+        $('#final-balance-eur').text(utils.fNum(data.addresses[0].final_balance/data.info.conversion*dataPrice.RAW.BTC.EUR.PRICE, true));
+        $('#total-received').text(utils.fBtc(data.addresses[0].total_received/data.info.conversion));
+        $('#total-sent').text(utils.fBtc(data.addresses[0].total_sent/data.info.conversion));
         $('#total-transactions').text(utils.fNum(data.addresses[0].n_tx));
         $('#balance-row').removeClass('d-none');
 

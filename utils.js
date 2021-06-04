@@ -15,5 +15,10 @@ var utils = {
     },
     middleEllipsis: (str, chars=8)=>{
         return `${str.slice(0,chars)}...${str.slice(str.length-chars)}`;
+    },
+    roundHour: (d)=>{
+        d.setMinutes(d.getMinutes() + 30);
+        d.setMinutes(0);
+        return d;
     }
 };

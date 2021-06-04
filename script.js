@@ -22,15 +22,30 @@ $(function(){
         var loading = new Loader();
         loading.show();
         var time = $(this).attr('time');
+        var oldTx = false;
+        var txBox = $(this).closest('.tx-box');
+        var calls;
         var parent = $(this).parent();
         var amount = $(this).attr('amount');
-        Promise.all([
-            api.getPriceAtTransactionTime(time, 'EUR'),
-            api.getPriceAtTransactionTime(time, 'USD')
-        ])
+        if ( time < (new Date().getTime()/1000)-86400*constants.DAYS_FOR_HOURLY_CONVERSATION ){
+            oldTx = true;
+            txBox.find('.hourly-accuracy').removeClass('d-none');
+            time = utils.roundHour(new Date(time*1000)).getTime()/1000;
+            calls = [
+                api.getPriceAtTransactionTimeHourly(time, 'EUR'),
+                api.getPriceAtTransactionTimeHourly(time, 'USD')
+            ]
+        } else {
+            calls = [
+                api.getPriceAtTransactionTime(time, 'EUR'),
+                api.getPriceAtTransactionTime(time, 'USD')
+            ]
+        }
+        Promise.all(calls)
         .then(function(data){
-            var eur = data[0].Data.Data[1].close;
-            var usd = data[1].Data.Data[1].close;
+            var eur = data[0].Data.Data.sort((a, b) => parseFloat(b.time) - parseFloat(a.time))[0].close;
+            var usd = data[1].Data.Data.sort((a, b) => parseFloat(b.time) - parseFloat(a.time))[0].close;
+
             $(parent).empty();
             $(parent).append(
                 `
@@ -165,7 +180,7 @@ var blockPayment = function(tx, conversion, eurNow, usdNow, latest_height){
     var html = `
         <div class="row my-3">
             <div class="col-12">
-                <div class="border rounded py-2 px-4">
+                <div class="border rounded py-2 px-4 tx-box">
                     <div class="row">
                         <div class="col-12 border-bottom text-center pb-2 ${tx.result > 0 ? 'text-success': 'text-danger'}">
                             <strong class="">${tx.result > 0 ? 'RECEIVED': 'SENT'}</strong>
@@ -186,10 +201,13 @@ var blockPayment = function(tx, conversion, eurNow, usdNow, latest_height){
                         <div class="col-12">
                             <div class=""><i class="fas fa-hammer fa-fw"></i> fee: ${utils.fBtc(tx.fee*0.00000001)} BTC</div>
                         </div>
-                        <div class="col-12 ${date.getTime() < new Date().getTime()-86400*7*1000 ? 'd-none' : ''}">
+                        <div class="col-12">
                             <div time="${tx.time}" amount="${tx.result/conversion}" class="show-price-at-transaction-time">
-                                <span><i class="fas fa-handshake fa-fw"></i> </span><span class="text-info clickable-text">Show value at transaction time</span>
+                                <span><i class="fas fa-handshake fa-fw"></i> </span><span class="text-info clickable-text">Show value at transaction time</span>                                
                             </div> 
+                        </div>
+                        <div class="col-12 hourly-accuracy d-none">
+                            <span class="text-warning"><small><i class="fas fa-fw mr-2 fa-exclamation-triangle"></i>This tx is older than ${constants.DAYS_FOR_HOURLY_CONVERSATION} days, thus value at tx time has a hourly accuracy (less accurate)</small></span>
                         </div>
                         <div class="col-12 hash-div">
                             <div style="word-wrap: break-word;">
@@ -242,6 +260,9 @@ var checkAddress = function(address, page, cb){
             }
             html += `
                 <div class="row">
+                    <div class="col-12 text-center ${data.addresses[0].n_tx > constants.MAX_OFFSET_TX ? '' : 'd-none'}">
+                        <span class="text-warning"><small><i class="fas fa-fw mr-2 fa-exclamation-triangle"></i>Older transactions are not shown. I can show only the latest ${constants.MAX_OFFSET_TX} transactions.</small></span>
+                    </div>
                     <div class="col-12 text-center my-3">
                         <div id="pagination-container"></div>
                     </div>
@@ -252,7 +273,7 @@ var checkAddress = function(address, page, cb){
             var searchParams = new URLSearchParams(window.location.search);
             var address = searchParams.get("address");
             $('#pagination-container').pagination({
-                items: data.addresses[0].n_tx > constants.MAX_OFFSET_TX ? data.addresses[0].n_tx-constants.MAX_OFFSET_TX : data.addresses[0].n_tx,
+                items: data.addresses[0].n_tx > constants.MAX_OFFSET_TX ? constants.MAX_OFFSET_TX : data.addresses[0].n_tx,
                 itemsOnPage: constants.ITEMS_PER_PAGE,
                 ellipsePageSet: false,
                 edges: 1,

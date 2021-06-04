@@ -47,5 +47,22 @@ var api = {
                 }
             });
         })
+    },
+    getPriceAtTransactionTimeHourly: function(ts, cur){
+        return new Promise((resolve, reject)=>{
+            $.ajax({
+                url : `https://min-api.cryptocompare.com/data/v2/histohour?fsym=BTC&tsym=${cur}&limit=1&toTs=${ts}`,
+                type : 'GET',
+                crossDomain: true,
+                dataType:'json',
+                success : function(data) {
+                    if (data.Response === "Error") return reject(data); 
+                    return resolve(data);
+                },
+                error : function(e){
+                    return reject(e);
+                }
+            });
+        })
     }
 };
